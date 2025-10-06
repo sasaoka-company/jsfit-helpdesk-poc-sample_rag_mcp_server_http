@@ -8,7 +8,6 @@ from langchain_community.document_loaders import UnstructuredWordDocumentLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_ollama import OllamaEmbeddings
 from langchain_community.vectorstores import FAISS
-from config import EMBEDDING_MODEL, CHUNK_SIZE, CHUNK_OVERLAP
 from logger import get_logger
 
 # ロガー設定
@@ -21,7 +20,7 @@ load_dotenv()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Embedding モデル（Ollamaを使用）
-embeddings = OllamaEmbeddings(model=EMBEDDING_MODEL)
+embeddings = OllamaEmbeddings(model="nomic-embed-text:latest")
 
 # PDF読み込み & DOCX対応 & チャンク化
 pdf_dir = os.path.join(BASE_DIR, "docs")
@@ -51,8 +50,8 @@ for path in docx_paths:
 raw_docs = all_raw_docs
 
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=CHUNK_SIZE,
-    chunk_overlap=CHUNK_OVERLAP,
+    chunk_size=1000,
+    chunk_overlap=200,
 )
 docs = text_splitter.split_documents(raw_docs)
 
